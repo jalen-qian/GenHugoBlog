@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"fmt"
 	"os"
 	"text/template"
 	"time"
@@ -32,16 +33,38 @@ func (g *Generator) GenerateFile() error {
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile(g.FileName, os.O_RDWR|os.O_APPEND, os.ModePerm)
+	f, err := os.OpenFile(g.FileName, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
 	}
-	return templateGen.Execute(f, map[string]interface{}{
-		"title" : g.Title,
-		"author" : g.Author,
-		"date" : time.Now().String(),
-		"lastmod": time.Now().String(),
-		"tags" : `["a","b"]`,
-		"categories" : `["a","b"]`,
+
+	return templateGen.ExecuteTemplate(f, "template.md", map[string]interface{}{
+		"title":      g.Title,
+		"author":     g.Author,
+		"date":       time.Now().String(),
+		"lastmod":    time.Now().String(),
+		"tags":       genStringSlice(g.Tags),
+		"categories": genStringSlice(g.Categories),
 	})
+}
+
+// genStringSlice 将切片数组转换为字符串，类似["a", "b"]的形式
+func genStringSlice(value []string) string {
+	str := "["
+	l := len(value)
+	for i, v := range value {
+		str += "\"" + v + "\""
+		if i < l-1 {
+			str += ", "
+		}
+	}
+	str += "]"
+	return str
+}
+
+// EnterMsg 获取标准输入中的值
+func EnterMsg(v *string, tip string) (err error) {
+	fmt.Println(tip)
+	_, err = fmt.Scanln(v)
+	return
 }
