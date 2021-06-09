@@ -41,8 +41,8 @@ func (g *Generator) GenerateFile() error {
 	return templateGen.ExecuteTemplate(f, "template.md", map[string]interface{}{
 		"title":      g.Title,
 		"author":     g.Author,
-		"date":       time.Now().String(),
-		"lastmod":    time.Now().String(),
+		"date":       time.Now().Format("2006-01-02T15:04:05+08:00"),
+		"lastmod":    time.Now().Format("2006-01-02T15:04:05+08:00"),
 		"tags":       genStringSlice(g.Tags),
 		"categories": genStringSlice(g.Categories),
 	})
@@ -63,8 +63,18 @@ func genStringSlice(value []string) string {
 }
 
 // EnterMsg 获取标准输入中的值
-func EnterMsg(v *string, tip string) (err error) {
+func EnterMsg(v *[]string, tip string) (err error) {
 	fmt.Println(tip)
-	_, err = fmt.Scanln(v)
+	tips := make([]interface{}, 100)
+	for i, _ := range tips {
+		a := ""
+		tips[i] = &a
+	}
+	_, _ = fmt.Scanln(tips...)
+	for _, tip := range tips {
+		if str, ok := tip.(*string); ok && *str != "" {
+			*v = append(*v, *str)
+		}
+	}
 	return
 }
