@@ -29,7 +29,11 @@ type Generator struct {
 
 // GenerateFile 初始化模板文件
 func (g *Generator) GenerateFile() error {
-	templateGen, err := template.New("tmp").ParseFiles("./templates/template.md")
+	templateFilePath := os.Getenv("HUGO_TEMPLATE")
+	if templateFilePath == "" {
+		templateFilePath = "./templates/template.md"
+	}
+	templateGen, err := template.New("tmp").ParseFiles(templateFilePath)
 	if err != nil {
 		return err
 	}

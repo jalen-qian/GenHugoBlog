@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/jalen-qian/GenHugoBlog/logging"
 	"github.com/jalen-qian/GenHugoBlog/pkg/gen"
 	"github.com/urfave/cli/v2"
@@ -31,9 +32,15 @@ var genCmd = &cli.Command{
 			Usage: "分类",
 			Value: nil,
 		},
+		&cli.StringFlag{
+			Name:  "filename",
+			Usage: "文件名称，默认用标题名称",
+			Value: "",
+		},
 	},
 	Usage: "生成器,用于根据模板生成文章",
 	Action: func(c *cli.Context) (err error) {
+		fmt.Println("请确保在环境变量[HUGO_TEMPLATE]配置模板文件的位置，如您未配置此环境变量，将从当前目录下的 [/templates/template.md] 读取，请确保此文件存在")
 		title := c.String("title")
 		if title == "" {
 			titles := make([]string, 0)
@@ -66,8 +73,12 @@ var genCmd = &cli.Command{
 				return err
 			}
 		}
+		filename := c.String("filename")
+		if filename == "" {
+			filename = fmt.Sprintf("./%s.md", title)
+		}
 		generator := gen.Generator{
-			FileName:   "./aaa.md",
+			FileName:   filename,
 			Title:      title,
 			Author:     author,
 			Tags:       tags,
