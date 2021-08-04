@@ -24,11 +24,8 @@ func NewApp() *cli.App {
 			return err
 		},
 	}
-
 	app.Version = "v1.0.0"
-
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
-
 	return app
 }
