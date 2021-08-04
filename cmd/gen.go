@@ -40,7 +40,6 @@ var genCmd = &cli.Command{
 	},
 	Usage: "生成器,用于根据模板生成文章",
 	Action: func(c *cli.Context) (err error) {
-		fmt.Println("请确保在环境变量[HUGO_TEMPLATE]配置模板文件的位置，如您未配置此环境变量，将从当前目录下的 [/templates/template.md] 读取，请确保此文件存在")
 		title := c.String("title")
 		if title == "" {
 			titles := make([]string, 0)

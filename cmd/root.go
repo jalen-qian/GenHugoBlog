@@ -16,7 +16,7 @@ func NewApp() *cli.App {
 		Description: "运行在k8s集群,提供对集群的管理",
 		Flags:       []cli.Flag{},
 		Commands: []*cli.Command{
-			genCmd,
+			genCmd, envCmd,
 		},
 		Before: func(c *cli.Context) error {
 			var err error

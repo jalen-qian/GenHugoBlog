@@ -31,6 +31,7 @@ type Generator struct {
 func (g *Generator) GenerateFile() error {
 	templateFilePath := os.Getenv("HUGO_TEMPLATE")
 	if templateFilePath == "" {
+		fmt.Println("请确保在环境变量[HUGO_TEMPLATE]配置模板文件的位置，如您未配置此环境变量，将从当前目录下的 [/templates/template.md] 读取，请确保此文件存在")
 		templateFilePath = "./templates/template.md"
 	}
 	templateGen, err := template.New("tmp").ParseFiles(templateFilePath)
